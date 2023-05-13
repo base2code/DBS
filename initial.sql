@@ -280,6 +280,28 @@ CREATE TABLE IF NOT EXISTS mydb.Lieferanten_haben_Bestellungen (
 ;
 
 
+-- -----------------------------------------------------
+-- Table mydb.LieferantenPreise
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS mydb.LieferantenPreise (
+  idLieferantenPreise SERIAL NOT NULL,
+  ProduktID INT NOT NULL,
+  LieferantID INT NOT NULL,
+  NeuerEKpreis DOUBLE PRECISION NULL,
+  PRIMARY KEY (idLieferantenPreise),
+  CONSTRAINT fk_LieferantenPreise_Produkt1
+    FOREIGN KEY (ProduktID)
+    REFERENCES mydb.Produkt (idProdukt)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_LieferantenPreise_Lieferant1
+    FOREIGN KEY (LieferantID)
+    REFERENCES mydb.Lieferant (idLieferant)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+;
+
+
 
 -- Insert sample data for PLZ
 INSERT INTO mydb.PLZ (idPLZ, Stadt)
@@ -490,6 +512,13 @@ VALUES
 -- Insert sample data for Mitarbeiter_hat_rollen
 INSERT INTO mydb.Mitarbeiter_hat_rollen (mitarbeiter_idmitarbeiter, rolle_idrolle)
 VALUES (1,  2), (2, 1), (3, 1), (4, 1), (5, 1);
+
+-- Insert sample data for LieferantenPreise
+INSERT INTO mydb.LieferantenPreise (ProduktID, LieferantID, NeuerEKpreis) 
+VALUES 
+(1, 1, 0.75), 
+(2, 1, 1), 
+(3, 2, 2.5);
 
 -- Kasse aktualisieren
 UPDATE mydb.Kasse
