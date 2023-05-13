@@ -36,7 +36,7 @@ GROUP BY mydb.Lieferant.idLieferant, mydb.Lieferant.Name
 HAVING COUNT(mydb.Produkt_hat_Lieferant.Produkt_ProduktID) > 10;
 ```
 
-### Aktualisierung des Bestands eines bestimmten Produkts (Auslösung des Triggeres.
+### Aktualisierung des Bestands eines bestimmten Produkts (Auslösung des Triggers zur Bestellung).
 ```sql
 UPDATE mydb.Produkt SET Bestand = Bestand - 1 WHERE idProdukt = 1;
 ```
