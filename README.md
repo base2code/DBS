@@ -55,7 +55,7 @@ HAVING Count(mydb.produkt_hat_lieferant.produkt_produktid) > 10;
 ### Aktualisierung des Bestands eines bestimmten Produkts (Auslösung des Triggers zur Bestellung).
 ```sql
 UPDATE mydb.produkt 
-SET    bestand = bestand - 1 
+SET    bestand = 4
 WHERE  idprodukt = 1; 
 ```
 ```sql
