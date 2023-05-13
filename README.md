@@ -81,4 +81,11 @@ SELECT * FROM mydb.produkt AS p WHERE bestand <= 5 AND NOT EXISTS (SELECT 1
   AND b.Bestellstatus = 'Bestellt');
 ```
 
-
+### Alle Kategorien auflisten, welche mehr als 5 Produkte haben und sortiere diese absteigend.
+```sql
+SELECT COUNT(idProdukt) AS Menge, kategorie
+FROM mydb.Produkt
+GROUP BY kategorie
+HAVING COUNT(idProdukt) >= 5
+ORDER BY kategorie DESC;
+```
