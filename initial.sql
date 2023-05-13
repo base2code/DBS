@@ -557,3 +557,7 @@ CREATE TRIGGER check_and_order_product_stock AFTER UPDATE
 ON mydb.Produkt 
 FOR EACH ROW
 EXECUTE PROCEDURE mydb.bestellen();
+
+-- Index für Produkte (Name und Kategorie)
+CREATE INDEX idx_produkt_name ON mydb.Produkt (Name);
+CREATE INDEX idx_produkt_kategorie ON mydb.Produkt (Kategorie);
