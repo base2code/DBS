@@ -140,3 +140,14 @@ ELECT CASE
          ELSE 'Nein, nicht alle Produkte sind im Bestand.' 
        END AS AllquantorErgebnis; 
 ```
+
+### Alle Adressen ausgeben, die keinem Mitarbeiter zugeordnet sind
+```sql
+SELECT a.straße, 
+       a.hausnummer, 
+       a.plz_idplz 
+FROM   mydb.mitarbeiter m 
+       RIGHT OUTER JOIN mydb.adresse a 
+                     ON m.adresse_idadresse = a.idadresse 
+WHERE  m.idmitarbeiter IS NULL; 
+```
