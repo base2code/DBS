@@ -357,6 +357,8 @@ VALUES
 ('Käse', 4.99, 2.50, 70, 'Molkereiprodukte'),
 ('Wein', 15.99, 10.00, 60, 'Alkohol'),
 ('Bier', 3.99, 2.00, 150, 'Alkohol'),
+('Vodka', 3.99, 2.00, 150, 'Alkohol'),
+('Jägermeister', 3.99, 2.00, 150, 'Alkohol'),
 ('Schokolade', 2.99, 1.50, 200, 'Süßwaren'),
 ('Chips', 1.99, 1.00, 250, 'Snacks'),
 ('Erdbeere', 4.99, 2.50, 200, 'Obst'),
@@ -497,76 +499,10 @@ VALUES
 INSERT INTO mydb.Mitarbeiter_hat_rollen (mitarbeiter_idmitarbeiter, rolle_idrolle)
 VALUES (1,  2), (2, 1), (3, 1), (4, 1), (5, 1);
 
-
-
-
-SELECT * FROM mydb.schichtenzuordnung;
-
-SELECT * FROM mydb.vertretung;
-
-SELECT * FROM mydb.kasse;
-
-
--- Auswahl aller Produkte mit Bestand größer als 50.
-SELECT * FROM mydb.Produkt WHERE Bestand > 50;
-
--- Berechnung des durchschnittlichen Verkaufspreises aller Produkte.
-SELECT AVG(VKpreis) AS Durchschnittspreis FROM mydb.Produkt;
-
-
--- Ermitteln der Mitarbeitern mit Rolle
-SELECT m.idMitarbeiter AS "Mitarbeiter ID", m.Nachname AS "Nachname", m.Vorname AS "Vorname", r.Name AS "Rolle"
-FROM mydb.Mitarbeiter m
-JOIN mydb.Mitarbeiter_hat_Rollen mr ON m.idMitarbeiter = mr.Mitarbeiter_idMitarbeiter
-JOIN mydb.Rolle r ON mr.Rolle_idRolle = r.idRolle;
-
-
--- Berechnung der Gesamtzahl der Mitarbeiter in jeder Stadt.
-SELECT mydb.PLZ.Stadt, COUNT(*) AS Anzahl_Mitarbeiter 
-FROM mydb.Mitarbeiter 
-INNER JOIN mydb.Adresse ON mydb.Mitarbeiter.Adresse_idAdresse = mydb.Adresse.idAdresse 
-INNER JOIN mydb.PLZ ON mydb.Adresse.PLZ_idPLZ = mydb.PLZ.idPLZ 
-GROUP BY mydb.PLZ.Stadt;
-
--- Auswahl aller Lieferanten, die mehr als 10 Produkte liefern.
-SELECT mydb.Lieferant.idLieferant, mydb.Lieferant.Name, COUNT(mydb.Produkt_hat_Lieferant.Produkt_ProduktID) AS AnzahlProdukte
-FROM mydb.Lieferant 
-INNER JOIN mydb.Produkt_hat_Lieferant ON mydb.Lieferant.idLieferant = mydb.Produkt_hat_Lieferant.Lieferant_idLieferant 
-GROUP BY mydb.Lieferant.idLieferant, mydb.Lieferant.Name
-HAVING COUNT(mydb.Produkt_hat_Lieferant.Produkt_ProduktID) > 10;
-
--- Aktualisierung des Bestands eines bestimmten Produkts.
-UPDATE mydb.Produkt SET Bestand = Bestand - 1 WHERE idProdukt = 1;
-
--- Auswahl aller Produkte, die nicht im Bestand sind.
-SELECT * FROM mydb.Produkt WHERE Bestand = 0;
-
--- Ermittlung der Anzahl der Verkäufe pro Produkt.
-SELECT Produkt_ProduktID, COUNT(*) AS Anzahl_Verkaeufe 
-FROM mydb.ProduktVerkauf 
-GROUP BY Produkt_ProduktID;
-
--- Rekursive Anfrage zur Ermittlung aller Vertretungen für eine gegebene Vertretung (idVertretung = 1).
-WITH RECURSIVE vertretungskette AS (
-  SELECT idVertretung, Vertretung_idVertretung 
-  FROM mydb.Vertretung 
-  WHERE idVertretung = 1
-  UNION ALL
-  SELECT v.idVertretung, v.Vertretung_idVertretung 
-  FROM mydb.Vertretung v
-  JOIN vertretungskette ON v.Vertretung_idVertretung = vertretungskette.idVertretung
-)
-SELECT * FROM vertretungskette;
-
-
-
-
-
 -- Kasse aktualisieren
 UPDATE mydb.Kasse
 SET Mitarbeiter_idMitarbeiter = 6
 WHERE idKasse = 1;
-
 
 -- Trigger für automatisches bestellen bei niedrigem Bestand
 CREATE OR REPLACE FUNCTION mydb.bestellen() RETURNS TRIGGER AS $example_table$
