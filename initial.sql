@@ -399,7 +399,8 @@ VALUES
 -- Insert sample data for Vertretung 1
 INSERT INTO mydb.Vertretung (Vertretungsgrund, Vertretung_idVertretung, vertretenermitarbeiter_id)
 VALUES 
-('Krankheit', null, 2);
+('Krankheit', null, 2),
+('Krankheit', 1, 3);
 
 UPDATE mydb.SchichtenZuordnung SET mitarbeiter_idmitarbeiter = 3, vertretung_idvertretung = 1 
 WHERE mitarbeiter_idmitarbeiter = 2 AND schicht_idschicht = 1 AND schichtdatum = '2023-05-10';
