@@ -2,90 +2,130 @@
 
 ### Auswahl aller Produkte mit Bestand größer als 50
 ```sql
-SELECT * FROM mydb.Produkt WHERE Bestand > 50;
+SELECT * 
+FROM   mydb.produkt 
+WHERE  bestand > 50; 
 ```
 
 ### Berechnung des durchschnittlichen Verkaufspreises aller Produkte.
 ```sql
-SELECT AVG(VKpreis) AS Durchschnittspreis FROM mydb.Produkt;
+SELECT Avg(vkpreis) AS Durchschnittspreis 
+FROM   mydb.produkt; 
 ```
 
 ### Ermitteln der Mitarbeitern mit Rolle
 ```sql
-SELECT m.idMitarbeiter AS "Mitarbeiter ID", m.Nachname AS "Nachname", m.Vorname AS "Vorname", r.Name AS "Rolle"
-FROM mydb.Mitarbeiter m
-JOIN mydb.Mitarbeiter_hat_Rollen mr ON m.idMitarbeiter = mr.Mitarbeiter_idMitarbeiter
-JOIN mydb.Rolle r ON mr.Rolle_idRolle = r.idRolle;
+SELECT m.idmitarbeiter AS "Mitarbeiter ID", 
+       m.nachname      AS "Nachname", 
+       m.vorname       AS "Vorname", 
+       r.NAME          AS "Rolle" 
+FROM   mydb.mitarbeiter m 
+       JOIN mydb.mitarbeiter_hat_rollen mr 
+         ON m.idmitarbeiter = mr.mitarbeiter_idmitarbeiter 
+       JOIN mydb.rolle r 
+         ON mr.rolle_idrolle = r.idrolle; 
 ```
 
 ### Berechnung der Gesamtzahl der Mitarbeiter in jeder Stadt.
 ```sql
-SELECT mydb.PLZ.Stadt, COUNT(*) AS Anzahl_Mitarbeiter 
-FROM mydb.Mitarbeiter 
-INNER JOIN mydb.Adresse ON mydb.Mitarbeiter.Adresse_idAdresse = mydb.Adresse.idAdresse 
-INNER JOIN mydb.PLZ ON mydb.Adresse.PLZ_idPLZ = mydb.PLZ.idPLZ 
-GROUP BY mydb.PLZ.Stadt;
+SELECT mydb.plz.stadt, 
+       Count(*) AS Anzahl_Mitarbeiter 
+FROM   mydb.mitarbeiter 
+       INNER JOIN mydb.adresse 
+               ON mydb.mitarbeiter.adresse_idadresse = mydb.adresse.idadresse 
+       INNER JOIN mydb.plz 
+               ON mydb.adresse.plz_idplz = mydb.plz.idplz 
+GROUP  BY mydb.plz.stadt; 
 ```
 
 ### Auswahl aller Lieferanten, die mehr als 10 Produkte liefern.
 ```sql
-SELECT mydb.Lieferant.idLieferant, mydb.Lieferant.Name, COUNT(mydb.Produkt_hat_Lieferant.Produkt_ProduktID) AS AnzahlProdukte
-FROM mydb.Lieferant 
-INNER JOIN mydb.Produkt_hat_Lieferant ON mydb.Lieferant.idLieferant = mydb.Produkt_hat_Lieferant.Lieferant_idLieferant 
-GROUP BY mydb.Lieferant.idLieferant, mydb.Lieferant.Name
-HAVING COUNT(mydb.Produkt_hat_Lieferant.Produkt_ProduktID) > 10;
+SELECT mydb.lieferant.idlieferant, 
+       mydb.lieferant.NAME, 
+       Count(mydb.produkt_hat_lieferant.produkt_produktid) AS AnzahlProdukte 
+FROM   mydb.lieferant 
+       INNER JOIN mydb.produkt_hat_lieferant 
+               ON mydb.lieferant.idlieferant = 
+                  mydb.produkt_hat_lieferant.lieferant_idlieferant 
+GROUP  BY mydb.lieferant.idlieferant, 
+          mydb.lieferant.NAME 
+HAVING Count(mydb.produkt_hat_lieferant.produkt_produktid) > 10; 
 ```
 
 ### Aktualisierung des Bestands eines bestimmten Produkts (Auslösung des Triggers zur Bestellung).
 ```sql
-UPDATE mydb.Produkt SET Bestand = Bestand - 1 WHERE idProdukt = 1;
+UPDATE mydb.produkt 
+SET    bestand = bestand - 1 
+WHERE  idprodukt = 1; 
 ```
 ```sql
-SELECT * FROM mydb.Bestellungen;
+SELECT * 
+FROM   mydb.bestellungen; 
 ```
 
 ### Auswahl aller Produkte, die nicht im Bestand sind
 ```sql
-SELECT * FROM mydb.Produkt WHERE Bestand = 0;
+SELECT * 
+FROM   mydb.produkt 
+WHERE  bestand = 0; 
 ```
 
 ### Ermittlung der Anzahl der Verkäufe pro Produkt.
 ```sql
-SELECT Produkt_ProduktID, COUNT(*) AS Anzahl_Verkaeufe 
-FROM mydb.ProduktVerkauf 
-GROUP BY Produkt_ProduktID;
+SELECT produkt_produktid, 
+       Count(*) AS Anzahl_Verkaeufe 
+FROM   mydb.produktverkauf 
+GROUP  BY produkt_produktid; 
 ```
 
 ### Rekursive Anfrage zur Ermittlung aller Vertretungen für eine gegebene Vertretung (idVertretung = 1).
 ```sql
-WITH RECURSIVE vertretungskette AS (
-  SELECT v.idVertretung, v.Vertretung_idVertretung, v.Vertretungsgrund, m.Vorname, m.Nachname 
-  FROM mydb.Vertretung v
-  JOIN mydb.Mitarbeiter m ON v.VertretenerMitarbeiter_id = m.idMitarbeiter
-  WHERE v.idVertretung = 1
-  UNION ALL
-  SELECT v.idVertretung, v.Vertretung_idVertretung, v.Vertretungsgrund, m.Vorname, m.Nachname 
-  FROM mydb.Vertretung v
-  JOIN vertretungskette ON v.Vertretung_idVertretung = vertretungskette.idVertretung
-  JOIN mydb.Mitarbeiter m ON v.VertretenerMitarbeiter_id = m.idMitarbeiter
-)
-SELECT * FROM vertretungskette;
+WITH recursive vertretungskette AS 
+( 
+       SELECT v.idvertretung, 
+              v.vertretung_idvertretung, 
+              v.vertretungsgrund, 
+              m.vorname, 
+              m.nachname 
+       FROM   mydb.vertretung v 
+       JOIN   mydb.mitarbeiter m 
+       ON     v.vertretenermitarbeiter_id = m.idmitarbeiter 
+       WHERE  v.idvertretung = 1 
+       UNION ALL 
+       SELECT v.idvertretung, 
+              v.vertretung_idvertretung, 
+              v.vertretungsgrund, 
+              m.vorname, 
+              m.nachname 
+       FROM   mydb.vertretung v 
+       JOIN   vertretungskette 
+       ON     v.vertretung_idvertretung = vertretungskette.idvertretung 
+       JOIN   mydb.mitarbeiter m 
+       ON     v.vertretenermitarbeiter_id = m.idmitarbeiter ) 
+SELECT * 
+FROM   vertretungskette;
 ```
 
 ### Alle Produkte, welchen einen geringen Bestand haben und noch nicht bestellt sind.
 ```sql
-SELECT * FROM mydb.produkt AS p WHERE bestand <= 5 AND NOT EXISTS (SELECT 1
-  FROM mydb.Bestellung_haben_Produkte AS bhp
-  JOIN mydb.Bestellungen AS b ON b.idBestellungen = bhp.Bestellungen_idBestellungen
-  WHERE bhp.Produkt_idProdukt = p.idProdukt
-  AND b.Bestellstatus = 'Bestellt');
+SELECT * 
+FROM   mydb.produkt AS p 
+WHERE  bestand <= 5 
+       AND NOT EXISTS (SELECT 1 
+                       FROM   mydb.bestellung_haben_produkte AS bhp 
+                              JOIN mydb.bestellungen AS b 
+                                ON b.idbestellungen = 
+                                   bhp.bestellungen_idbestellungen 
+                       WHERE  bhp.produkt_idprodukt = p.idprodukt 
+                              AND b.bestellstatus = 'Bestellt'); 
 ```
 
 ### Alle Kategorien auflisten, welche mehr als 5 Produkte haben und sortiere diese absteigend.
 ```sql
-SELECT COUNT(idProdukt) AS Menge, kategorie
-FROM mydb.Produkt
-GROUP BY kategorie
-HAVING COUNT(idProdukt) >= 5
-ORDER BY kategorie DESC;
+SELECT Count(idprodukt) AS Menge, 
+       kategorie 
+FROM   mydb.produkt 
+GROUP  BY kategorie 
+HAVING Count(idprodukt) >= 5 
+ORDER  BY kategorie DESC; 
 ```
