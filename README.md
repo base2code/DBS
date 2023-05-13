@@ -130,8 +130,7 @@ HAVING Count(idprodukt) >= 5
 ORDER  BY kategorie DESC; 
 ```
 
-### Sind alle Produkte im Bestand
-#### Allquantor
+### Sind alle Produkte im Bestand (Allquantor)
 ```sql
 ELECT CASE 
          WHEN NOT EXISTS (SELECT * 
