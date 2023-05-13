@@ -59,13 +59,15 @@ GROUP BY Produkt_ProduktID;
 ### Rekursive Anfrage zur Ermittlung aller Vertretungen für eine gegebene Vertretung (idVertretung = 1).
 ```sql
 WITH RECURSIVE vertretungskette AS (
-  SELECT idVertretung, Vertretung_idVertretung 
-  FROM mydb.Vertretung 
-  WHERE idVertretung = 1
+  SELECT v.idVertretung, v.Vertretung_idVertretung, v.Vertretungsgrund, m.Vorname, m.Nachname 
+  FROM mydb.Vertretung v
+  JOIN mydb.Mitarbeiter m ON v.VertretenerMitarbeiter_id = m.idMitarbeiter
+  WHERE v.idVertretung = 1
   UNION ALL
-  SELECT v.idVertretung, v.Vertretung_idVertretung 
+  SELECT v.idVertretung, v.Vertretung_idVertretung, v.Vertretungsgrund, m.Vorname, m.Nachname 
   FROM mydb.Vertretung v
   JOIN vertretungskette ON v.Vertretung_idVertretung = vertretungskette.idVertretung
+  JOIN mydb.Mitarbeiter m ON v.VertretenerMitarbeiter_id = m.idMitarbeiter
 )
 SELECT * FROM vertretungskette;
 ```
