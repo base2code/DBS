@@ -151,3 +151,18 @@ FROM   mydb.mitarbeiter m
                      ON m.adresse_idadresse = a.idadresse 
 WHERE  m.idmitarbeiter IS NULL; 
 ```
+
+### Produktpreise (EK) updaten. Basierend auf der Tabelle Lieferantenpreis
+```sql
+UPDATE mydb.produkt 
+SET    ekpreis = (SELECT neuerekpreis 
+                  FROM   mydb.lieferantenpreise 
+                  WHERE  mydb.produkt.idprodukt = 
+                         mydb.lieferantenpreise.produktid 
+                  ORDER  BY idlieferantenpreise DESC 
+                  LIMIT  1) 
+WHERE  EXISTS (SELECT 1 
+               FROM   mydb.lieferantenpreise 
+               WHERE  mydb.produkt.idprodukt = mydb.lieferantenpreise.produktid) 
+; 
+```
