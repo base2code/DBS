@@ -70,4 +70,13 @@ WITH RECURSIVE vertretungskette AS (
 SELECT * FROM vertretungskette;
 ```
 
+### Alle Produkte, welchen einen geringen Bestand haben und noch nicht bestellt sind.
+```sql
+SELECT * FROM mydb.produkt AS p WHERE bestand <= 5 AND NOT EXISTS (SELECT 1
+  FROM mydb.Bestellung_haben_Produkte AS bhp
+  JOIN mydb.Bestellungen AS b ON b.idBestellungen = bhp.Bestellungen_idBestellungen
+  WHERE bhp.Produkt_idProdukt = p.idProdukt
+  AND b.Bestellstatus = 'Bestellt');
+```
+
 
