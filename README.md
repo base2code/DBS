@@ -152,7 +152,7 @@ FROM   mydb.mitarbeiter m
 WHERE  m.idmitarbeiter IS NULL; 
 ```
 
-### Produktpreise (EK) updaten. Basierend auf der Tabelle Lieferantenpreis
+### Produktpreise (EK) updaten. Basierend auf der Tabelle Lieferantenpreise
 ```sql
 UPDATE mydb.produkt 
 SET    ekpreis = (SELECT neuerekpreis 
