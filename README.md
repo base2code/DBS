@@ -129,3 +129,15 @@ GROUP  BY kategorie
 HAVING Count(idprodukt) >= 5 
 ORDER  BY kategorie DESC; 
 ```
+
+### Sind alle Produkte im Bestand
+#### Allquantor
+```sql
+ELECT CASE 
+         WHEN NOT EXISTS (SELECT * 
+                          FROM   mydb.produkt 
+                          WHERE  bestand <= 0) THEN 
+         'Ja, alle Produkte sind im Bestand.' 
+         ELSE 'Nein, nicht alle Produkte sind im Bestand.' 
+       END AS AllquantorErgebnis; 
+```
