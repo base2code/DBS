@@ -132,7 +132,7 @@ ORDER  BY kategorie DESC;
 
 ### Sind alle Produkte im Bestand (Allquantor)
 ```sql
-ELECT CASE 
+SELECT CASE 
          WHEN NOT EXISTS (SELECT * 
                           FROM   mydb.produkt 
                           WHERE  bestand <= 0) THEN 
