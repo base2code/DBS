@@ -1,4 +1,4 @@
-# SQL Queries
+# SQL Queries Datenbanksysteme Hochschule Weserbergland (WI 71/22)
 
 ### Auswahl aller Produkte mit Bestand größer als 50
 ```sql
